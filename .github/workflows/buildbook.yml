@@ -19,7 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install mdbook
-        run: apt-get install mdbook
+        run: sudo apt-get install mdbook
 
       - name: Build all books
         run:
