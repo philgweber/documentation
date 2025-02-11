@@ -33,3 +33,4 @@ jobs:
         with:
           name: built-books
           path: '**/book'
+          if-no-files-found: error
