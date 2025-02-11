@@ -18,7 +18,17 @@ jobs:
         target: [thumbv8m.main-none-eabihf]
     steps:
       - uses: actions/checkout@v4
+      - name: Install mdbook
+        run: apt-get install mdbook
+
+      - name: Build all books
+        run:
+          for book in $(find . -name book.toml -exec dirname {} \;); do
+            mdbook build $book
+          done
+
+      - name: Upload built books
+        uses: actions/upload-artifact@v2
         with:
-          submodules: true
-      - name: mdbook build
-        run: mdbook build
+          name: built-books
+          path: '**/book'
