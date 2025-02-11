@@ -19,10 +19,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install mdbook
-        run: sudo apt-get install mdbook
+        run: |
+          curl -sSL https://github.com/rust-lang/mdBook/releases/download/v0.4.12/mdbook-v0.4.12-x86_64-unknown-linux-gnu.tar.gz | tar -xz -C /usr/local/bin
 
       - name: Build all books
-        run:
+        run: |
           for book in $(find . -name book.toml -exec dirname {} \;); do
             mdbook build $book
           done
