@@ -1,0 +1,24 @@
+# This workflow makes sure we can build all the books successfully
+permissions:
+  contents: read
+on:
+  push:
+    branches: [actions]
+  pull_request:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+name: build-book
+jobs:
+  buildbook:
+    runs-on: ubuntu-latest
+    name: ${{ matrix.target }}
+    strategy:
+      matrix:
+        target: [thumbv8m.main-none-eabihf]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+      - name: mdbook build
+        run: mdbook build
