@@ -9,7 +9,7 @@ Both these files live directly under the root folder, but will likely move in th
 <br><b>Note: </b> If these files are not present or found the MPTF Core driver will yellow bang.
 
  ## PocSpec.txt
-This file defines UUID's for input and output devices. If using an input or output from the OS you must use the existing UUID definitions found in the MPTF documentation.
+This file refers to a specification file that defines various parameters and configurations for power and thermal management. The file includes detailed information about algorithms, input and output channels, and other settings that are used by MPTF to manage power and thermal conditions efficiently. If using an input or output from the OS you must use the existing UUID definitions found in the MPTF documentation.
 
 In this case the output device is defined in the PocIF.txt but must be unique UUID if you are creating your own output channels.
 
