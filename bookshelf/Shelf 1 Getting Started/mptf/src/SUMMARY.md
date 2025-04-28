@@ -13,3 +13,4 @@
 - [MCU Firmware](mcu-firmware.md)
   - [Apps Interface](apps-interface.md)
   - [Debugging](mcu-debugging.md)
+- [Demo](mptf-demo.md)
