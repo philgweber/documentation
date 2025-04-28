@@ -30,21 +30,20 @@ In this case the output device is defined in the PocIF.txt but must be unique UU
 The last line monitors the input values selected in the OS from the power mode and maps this to output values for O_FAN1_ACTIVE_RPM. The last 4 values are the output values in this case in percentage for the fan speed 15,25,35,45.
 
 ## PocIF.txt
-The PocIF file is the interface file that defines the input and output channel for MPTF. The example below maps an output channel to an ACPI function with several parameter. The parameter is broken down to the following format :-
-
-GUID MPTF Customize Output - {91F589E0-45F0-4C6E-A17D-24FD8E8CBDCE}
-Channel ID - 730
-Configuration Input Format - 2 (Fixed do not change)
-Total Configuration - 5
-Configuration 1 (Version) - 1
-Configuration 2 (Max) - 60
-Configuration 3 (Min) - 10
-Configuration 4 (Default) - 20
-Configuration 5 (Function ID) - 2
-Device Bios Name - "\_SB.CIO1"
+The PocIF file is the interface file that defines the input and output channel for MPTF. The example below maps an output channel to an ACPI function with several parameter.
 
 ```
 // O_FAN1_ACTIVE_RPM
+// GUID representing MPTF Customize Output - {91F589E0-45F0-4C6E-A17D-24FD8E8CBDCE}
+// Channel ID - 730
+// Configuration Input Format - 2 (Fixed do not change)
+// Total Configuration - 5
+// Configuration 1 (Version) - 1
+// Configuration 2 (Max) - 60
+// Configuration 3 (Min) - 10
+// Configuration 4 (Default) - 20
+// Configuration 5 (Function ID) - 2
+// Device Bios Name - "\_SB.CIO1"
 {91F589E0-45F0-4C6E-A17D-24FD8E8CBDCE}_730,2,5,1,60,10,20,2,"\_SB.CIO1"
 ```
 
