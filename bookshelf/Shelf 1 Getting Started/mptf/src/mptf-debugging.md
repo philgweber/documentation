@@ -6,7 +6,7 @@ The first step is to make sure the MPTF drivers are loaded successfully in devic
 
 In device manager expand the Thermal devices tab to make sure see the following three devices listed without any yellow bang.
 
-![MPTF Driver](media\device_manager.png)
+![MPTF Driver](media/device_manager.png)
 
 If you don't see the "Thermal devices" in device manager, you are either missing the ACPI entries or the files are not present in your windows folder. Review the sections on ACPI and the MPTF drivers to make sure all the files are present.
 

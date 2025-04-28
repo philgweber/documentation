@@ -25,7 +25,7 @@ You can find this driver under windows driverstore folder
 
 If it is enumerated properly you will see it show up as MPTF Core Driver in device manager.
 
-![MPTF Driver](media\device_manager.png)
+![MPTF Driver](media/device_manager.png)
 
 MPTF Core Driver logging can be enable in windbg with the following commands.
 ```
@@ -53,7 +53,7 @@ You can find this driver under windows driverstore folder
 
 You will find the driver under device manager in Thermal devices as Microsoft Customized IO Driver
 
-![MPTF Driver](media\device_manager.png)
+![MPTF Driver](media/device_manager.png)
 
 Microsoft Customized IO Driver logging can be enabled in windbg with the following commands.
 ```
@@ -80,5 +80,5 @@ You can find this driver under windows driverstore folder
 
 If it loads with no errors you will see it loaded as MPTF Custom IO Signal Client Driver in device manager.
 
-![MPTF Driver](media\device_manager.png)
+![MPTF Driver](media/device_manager.png)
 

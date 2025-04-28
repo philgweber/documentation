@@ -2,7 +2,7 @@
 
 On ARM platforms where the interface to the EC is in the secure world, we have a service that runs in the secure world that translates requests from the OS to commands sent to the EC. In the case of MPTF there is a Thermal Service that runs within the EC service to handle requests for custom IO. 
 
-![EC Service](media\odp_arch.png)
+![EC Service](media/odp_arch.png)
 
 ## ACPI to EC Service Communication
 The EC Specification defines commands for get variable and set variable.
@@ -42,7 +42,7 @@ In the example given here the EC is connected via eSPI and we map a chunk of mem
 
 The EC Firmware is notified when a region of memory is updated and will adjust fan and hardware logic based on these new values.
 
-![EC Comm](media\acpi_haf_ec.png)
+![EC Comm](media/acpi_haf_ec.png)
 
 
 The EC service receives the get/set variable requests in the thermal service
