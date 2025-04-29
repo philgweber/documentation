@@ -1,10 +1,10 @@
 # MPTF Drivers
 
-There is 3 primary drivers involved in MPTF 
+There is 3 primary drivers involved in MPTF
  - MPTF Core Driver
  - Microsoft Customized IO Driver
  - MPTF Customize IO Signal Client
- 
+
 All these drivers are included in OS drops after 26394 as part of the default OS build.
 
  ## MPTF Core Driver
@@ -101,3 +101,19 @@ The driver is in windows driverstore folder
 If it loads with no failures you should see it listed in device manager
 
 ![Temp Sensor](media/temp_sensor.png)
+
+## MPTF Power Tracker Core Driver
+This is an optional MPTF driver that enables MPTF tooling that can be used for debugging and tuning. The MPTF Power Tracker Core Driver is not required for MPTF functionality but is required for MPTF tooling to work.
+
+The following ACPI entry will cause the MPTF Power Tracker Core Driver to be loaded at boot time.
+```
+// MPTF Power Tracker Core Driver
+Device(MPSI) {
+  Name(_HID, "MSFT0012")
+  Name (_UID, 1)
+}
+```
+
+You can find this driver under windows driverstore folder
+
+`C:\Windows\System32\DriverStore\FileRepository\mptfpowertrackercore.inf_*`
