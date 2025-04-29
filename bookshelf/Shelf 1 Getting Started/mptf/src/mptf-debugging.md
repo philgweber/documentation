@@ -16,6 +16,11 @@ If Microsoft Customized IO Driver is present but yellow banged, this is normally
 
 If MPTF Custom IO Signal Client River is present but yellow banged, this indicates there is normally a problem in your custom input/output driver component. Enable logging in your driver and make sure it is loaded successfully and no failures. Enable all other logs under logging and review content.
 
+Sometimes drivers will not load correctly if the MPTF service is not running so be sure to make sure in your service manager that MPTF service is running and set to automatically start.
+
+![MPTF service](media/mptf_service.png)
+
+
 ## Logging
 
 Both the MPTF Core Driver and Microsoft Customized IO Driver support WPP logging. Make sure you enable the logs from boot so we have a complete picture of what happend. These can be enabled via registry settings with autologger or through windbg using the following commands:

@@ -13,6 +13,94 @@ Device(MPC0) {
 
 There is no requirement to define further resources through the core driver those are all controlled by the IO driver entries.
 
+## Microsoft Temperature Sensor Driver
+
+This driver is loaded uner MSFT000A entry, it must always define a _TMP method and _DSM with support for function 0 and function1. If just these two functions are supported function 0 will return 0x3
+
+```
+  Method (_TMP) {
+    // Check to make sure FFA is available and not unloaded
+    If(LEqual(\_SB.FFA0.AVAL,One)) {
+      Name(BUFF, Buffer(24){}) // Create buffer for send/recv data
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18, CMDD) // In – First byte of command
+      CreateByteField(BUFF,19, TMP1) // In – Thermal Zone Identifier
+      CreateField(BUFF,144,32,TMPD) // Out – temperature for TZ
+
+      Store(20, LENG)
+      Store(0x1, CMDD) // EC_THM_GET_TMP
+      Store(1,TMP1)
+      Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID) // Thermal
+      Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+        Return (TMPD)
+      }
+    }
+    Return(Zero)
+  }
+
+  // Update Thresholds
+  Method(STMP, 0x2, Serialized) {
+    // Check to make sure FFA is available and not unloaded
+    If(LEqual(\_SB.FFA0.AVAL,One)) {
+      Name(BUFF, Buffer(32){}) // Create buffer for send/recv data
+      CreateByteField(BUFF,0,STAT) // Out – Status for req/rsp
+      CreateByteField(BUFF,1,LENG) // In/Out – Bytes in req, updates bytes returned
+      CreateField(BUFF,16,128,UUID) // UUID of service
+      CreateByteField(BUFF,18, CMDD) // In – First byte of command
+      CreateByteField(BUFF,19, TID1) // In – Thermal Zone Identifier
+      CreateDwordField(BUFF,20,THS1) // In – Timeout in ms
+      CreateDwordField(BUFF,24,THS2) // In – Low threshold tenth Kelvin
+      CreateDwordField(BUFF,28,THS3) // In – High threshold tenth Kelvin
+      CreateField(BUFF,144,32,THSD) // Out – Status from EC
+
+      Store(0x30, LENG)
+      Store(0x2, CMDD) // EC_THM_SET_THRS
+      Store(1,TID1)
+      Store(0,THS1) // Timout in ms 0 ignore
+      Store(Arg0,THS2) // Low Threshold
+      Store(Arg1,THS3) // High Threshold
+      Store(ToUUID("31f56da7-593c-4d72-a4b3-8fc7171ac073"), UUID) // Thermal
+      Store(Store(BUFF, \_SB_.FFA0.FFAC), BUFF)
+
+      If(LEqual(STAT,0x0) ) // Check FF-A successful?
+      {
+        Return (THSD)
+      }
+    }
+    Return(Zero)
+  }
+
+
+  // Arg0 GUID
+  //      1f0849fc-a845-4fcf-865c-4101bf8e8d79 - Temperature GUID
+  // Arg1 Revision
+  // Arg2 Function Index
+  // Arg3 Function dependent
+  Method(_DSM, 0x4, Serialized) {
+    // Input Variable
+    If(LEqual(ToUuid("1f0849fc-a845-4fcf-865c-4101bf8e8d79"),Arg0)) {
+        Switch(Arg2) {
+          Case(0) {
+            // We support function 0,1
+            Return (Buffer() {0x03, 0x00, 0x00, 0x00})
+          }
+          // Update Thresholds
+          // Arg3 = Package () { LowTemp, HighTemp }
+          Case(1) {
+            Return(STMP(DeRefOf(Index(Arg3,0)),DeRefOf(Index(Arg3,1)))) // Set Temp low and high threshold
+          }
+        }
+    }
+
+    Return (Ones)
+  }
+```
+
 ## Microsoft Customized IO Signal Driver
 
 This driver is loaded under MSFT0011 entry, and must always define Function 0 for both input and output devices. Function 0 is a bitmask of all the other variables that are supported on this platform. If you support functions 1,2,3 you would return 0b1111 (0xf) to indicate support for function 0-3.
