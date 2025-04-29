@@ -82,3 +82,22 @@ If it loads with no errors you will see it loaded as MPTF Custom IO Signal Clien
 
 ![MPTF Driver](media/device_manager.png)
 
+## Microsoft Temperature Sensor Driver
+The Temperature Sensor Driver is an input to MPTF that allows MPTF to take actions based on skin temperature or other sensors external to the CPU. Details of the MPTF temperature sensor can be found in the MTPF specification.
+
+The following ACPI entry is necessary to load the Temperature Sensor Driver
+```
+// Skin temperature sensor
+Device(TMP1) {
+  Name(_HID, "MSFT000A")
+  Name (_UID, 1)
+  ...
+```
+
+The driver is in windows driverstore folder 
+
+`C:\Windows\System32\DriverStore\FileRepository\mstemperaturesensor.inf_* `
+
+If it loads with no failures you should see it listed in device manager
+
+![Temp Sensor](media/temp_sensor.png)
