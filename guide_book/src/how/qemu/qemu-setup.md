@@ -16,11 +16,9 @@ This also depends on rustup being installed
 Note this uses Version 9.0.0 tip QEMU and other versions have varying issues. Building the emulator takes some time depending on your computer.
 
 ```
-sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build qemu-utils libudev-dev libncurses-dev
-wget https://download.qemu.org/qemu-9.0.0.tar.xz
-tar xf qemu-9.0.0.tar.xz
-cd qemu-9.0.0
-./configure --enable-vnc
+git clone https://github.com/qemu/qemu.git
+cd qemu
+./configure
 make
 sudo make install
 ```
@@ -56,6 +54,7 @@ WinVOS is a pared down Windows OS image that is convenient for basic development
 - Microsoft-WinVOS-Connectivity-Package.cab
 - Microsoft-WinVOS-Driver-Support-Package.cab
 - Microsoft-WinVOS-PnP-Package.cab
+- Microsoft-WinVOS-Virtualization-Package.cab
 
 To mount and install the CAB files into the VHDX:
 
@@ -65,13 +64,31 @@ To mount and install the CAB files into the VHDX:
 
 2. Inject each CAB file using DISM (replace the drive and paths with actual):
 
-    `dism /Image:D:\ /Add-Package /PackagePath:"C:\temp\Microsoft-WinVOS-Connectivity-Package.cab"`
+    `dism /Image:D:\ /Add-Package /PackagePath:"C:\packages"`
 
-    `dism /Image:D:\ /Add-Package /PackagePath:"C:\temp\Microsoft-WinVOS-Driver-Support-Package.cab"`
+3. With HyperV enabled the systemwatchdogpoliy must be disabled to prevent 0x101 bugchecks in WinVOS on QEMU. To change your BCD settings on the image you can run diskpart and select the disk, partition and assign a drive letter
 
-    `dism /Image:D:\ /Add-Package /PackagePath:"C:\temp\Microsoft-WinVOS-PnP-Package.cab"`
+    ```
+    diskpart
+    list disk
+    sel disk 2
+    list part
+    sel part 2
+    assign letter=S:
+    ```
 
-3. Unmount your VDHX file to make sure it is saved by right-clicking on the drive in File Explorer and selecting Eject.  Alternatively, from PowerShell:
+    From admin command prompt disable systemwatchdog and enable test signing
+
+    ```
+    bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {dbgsettings} loadoptions "systemwatchdogpolicy=disabled"
+    bcdedit /store S:\EFI\Microsoft\Boot\BCD /set {default} testsigning on"
+    ```
+
+    From diskpart remove the drive letter to clean up disk references and unmount the VHDX
+    
+    `remove letter=S:`
+
+4. Unmount your VDHX file to make sure it is saved by right-clicking on the drive in File Explorer and selecting Eject.  Alternatively, from PowerShell:
 
     `Dismount-VHD -Path "C:\Path\To\Your.vhdx`
 
