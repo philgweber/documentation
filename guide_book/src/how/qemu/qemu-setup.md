@@ -13,13 +13,12 @@ This also depends on rustup being installed
 [Install Rustup](https://rustup.rs)
 
 ### QEMU build and setup
-Note this uses Version 9.0.0 tip QEMU and other versions have varying issues. Building the emulator takes some time depending on your computer.
+Building the emulator takes some time depending on your computer. Tip QEMU has booting issues fixed and is validated.
 
 ```
 sudo apt-get install git libglib2.0-dev libfdt-dev libpixman-1-dev zlib1g-dev ninja-build qemu-utils libudev-dev libncurses-dev
-wget https://download.qemu.org/qemu-9.0.0.tar.xz
-tar xf qemu-9.0.0.tar.xz
-cd qemu-9.0.0
+git clone https://github.com/qemu/qemu.git
+cd qemu
 ./configure --enable-vnc
 make
 sudo make install
@@ -71,7 +70,29 @@ To mount and install the CAB files into the VHDX:
 
     `dism /Image:D:\ /Add-Package /PackagePath:"C:\temp\Microsoft-WinVOS-PnP-Package.cab"`
 
-3. Unmount your VDHX file to make sure it is saved by right-clicking on the drive in File Explorer and selecting Eject.  Alternatively, from PowerShell:
+3. Apply BCD settings for your disk image. <b>Note:</b> Your disk number may be different make sure to select the disk that matches your VHDX image.
+    ```
+    diskpart
+    list disk
+    sel disk 2
+    list part
+    sel part 2
+    assign letter=S
+    ```
+    If you enable HyperV you will need to disable systemwatchdog to prevent 0x101 bugchecks:
+    ```
+    bcdedit /store S:\EFI\Microsoft\boot\BCD /set {dbgsettings} loadoptions "systemwatchdogpolicy=disabled"
+    bcdedit /store S:\EFI\Microsoft\boot\BCD /set {default} testsigning on"
+    ```
+
+    You can also enable debugger with the following settings at this point if you want Windbg enabled
+    ```
+    bcdedit /store S:\EFI\Microsoft\boot\BCD /enum all
+    bcdedit /store S:\EFI\Microsoft\boot\BCD /set {default} debug on
+    bcdedit /store S:\EFI\Microsoft\boot\BCD BCD /dbgsettings serial debugport:1 baudrate:115200
+    ````
+
+4. Unmount your VDHX file to make sure it is saved by right-clicking on the drive in File Explorer and selecting Eject.  Alternatively, from PowerShell:
 
     `Dismount-VHD -Path "C:\Path\To\Your.vhdx`
 
